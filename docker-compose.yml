@@ -1,0 +1,19 @@
+version: '2'
+services:
+    couchdb:
+        image: couchdb:2.3.1
+        network_mode: host
+        volumes:
+            - "./couchdb/data:/opt/couchdb/data:rw"
+            - "./couchdb/etc:/opt/couchdb/etc/:rw"
+            - "./couchdb/log:/opt/couchdb/log/:rw"
+        environment:
+            - "COUCHDB_USER=admin"
+            - "COUCHDB_PASSWORD=supersecret"
+    fauxton:
+        image: 3apaxicom/fauxton
+        network_mode: host
+        command:
+            - sh
+            - "-c"
+            - "fauxton -c http://localhost:5984"
