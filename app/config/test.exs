@@ -4,7 +4,8 @@ use Mix.Config
 # you can enable the server option below.
 config :ubg5, Ubg5Web.Endpoint,
   http: [port: 4002],
-  server: false
+  server: false,
+  adapter: Tesla.Mock
 
 # Print only warnings and errors during test
 config :logger, level: :warn
