@@ -1,3 +1,3 @@
 # Uwspółcześniona Biblia Gdańska
 
-Reader budowany na elixir i phoenix
+Bible reader build using elixir, phoenix, couchdb oraz temple
