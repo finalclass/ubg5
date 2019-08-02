@@ -15,7 +15,7 @@ defmodule Ubg5.Application do
     ]
 
     Ubg5.Bibles.init_db()
-    
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Ubg5.Supervisor]
