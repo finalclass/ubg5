@@ -21,5 +21,6 @@ defmodule Ubg5Web.Router do
     pipe_through :browser
     
     get "/", ReaderController, :index
+    get "/:bible/:book_slug_name/:chapter_number/", ReaderController, :index
   end
 end
