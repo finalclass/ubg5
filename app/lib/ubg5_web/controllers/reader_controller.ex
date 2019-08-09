@@ -39,8 +39,8 @@ defmodule Ubg5Web.ReaderController do
     |> assign(:verses, verses)
     |> assign(:books, structure["books"])
     |> assign_js_and_css()
-    |> assign(:prev_chapter_number, nil)
-    |> assign(:next_chapter_number, 2)
+    |> assign(:prev_chapter_number, get_prev_chapter_number(chapter_number))
+    |> assign(:next_chapter_number, get_next_chapter_number(chapter_number, book_structure["nof_chapters"]))
     |> assign(:show_chapters, Map.has_key?(conn.query_params, "chapters"))
     |> render()
   end
@@ -51,5 +51,19 @@ defmodule Ubg5Web.ReaderController do
       "book_slug_name" => "rdz",
       "chapter_number" => "1"
     })
+  end
+
+  def get_prev_chapter_number(current_chapter_number) do
+    cond do
+      current_chapter_number <= 1 -> nil
+      true -> current_chapter_number - 1
+    end
+  end
+  
+  def get_next_chapter_number(current_chapter_number, nof_chapters) do
+    cond do
+      current_chapter_number >= nof_chapters -> nil
+      true -> current_chapter_number + 1
+    end
   end
 end

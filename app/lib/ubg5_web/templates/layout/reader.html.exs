@@ -51,7 +51,7 @@ html lang: "en" do
             td do
               if @prev_chapter_number do
                 a class: "prev-chapter",
-                  href: "/" <> @book_slug_name <> "/" <> Integer.to_string(@prev_chapter_number) do
+                  href: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @prev_chapter_number) do 
                   partial Phoenix.HTML.raw("&laquo; rozdział " <> Integer.to_string(@prev_chapter_number))
                 end
               end # if
@@ -60,24 +60,23 @@ html lang: "en" do
             td do
               cond do
                 @show_chapters ->
-                  chapters_param = if @current_book["nof_chapters"] > 1, do: %{chapters: true}, else: %{}
-
                   phx_link class: "show_chapters",
-                    to: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @chapter_number, chapters_param) do
+                    to: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @chapter_number) do
                     text "księgi"
                   end
                 !@show_chapters && @current_book["nof_chapters"] > 1 ->
-                  a class: "show-chapters",
-                    href: "/" <> @book_slug_name <> "/" <> Integer.to_string(@chapter_number) <> "?chapters" do
+                  phx_link class: "show-chapters",
+                    to: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @chapter_number, chapters: true) do
                     text "rozdziały"
                   end
+                !@show_chapters && @current_book["nof_chapters"] <= 1 -> :ok
               end # cond
             end # td
 
             td do
               if @next_chapter_number do
                 a class: "next-chapter",
-                  href: "/" <> @book_slug_name <> "/" <> Integer.to_string(@next_chapter_number) do
+                  href: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @next_chapter_number) do
                   partial Phoenix.HTML.raw("rozdział " <> Integer.to_string(@next_chapter_number) <> " &raquo;")
                 end
               end
