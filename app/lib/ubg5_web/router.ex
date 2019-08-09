@@ -9,18 +9,21 @@ defmodule Ubg5Web.Router do
     plug :put_secure_browser_headers
   end
   
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :projector do
+    plug :accepts, ["text"]
   end
 
-  scope "/api", Ubg5Web do
-    pipe_through :api
-  end
+  scope "/projector" do
+    pipe_through :projector
 
+    post "/", ProjectorController, :set_verse
+  end
+  
   scope "/", Ubg5Web do
     pipe_through :browser
     
     get "/", ReaderController, :index
     get "/:bible/:book_slug_name/:chapter_number/", ReaderController, :index
+    get "/projector", ProjectorController, :index
   end
 end
