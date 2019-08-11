@@ -71,6 +71,12 @@ defmodule Ubg5.Bibles do
     end)
   end
 
+  def get_book_info_by_short_code(structure, book_short_code) do
+    Enum.find(structure["books"], fn book ->
+      book["short_code"] == book_short_code
+    end)
+  end
+  
   def get_verses(bible, book_short_code, chapter, verse_from, verse_to) do
     res =
       get!("/_design/query/_view/verses",

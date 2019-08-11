@@ -15,6 +15,11 @@ defmodule Ubg5.Projector do
   end
 
   ## Defining GenServer Callbacks
+
+  @impl true
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
   
   @impl true
   def handle_call({:get_verse, proj_id}, _from, state) do
@@ -22,19 +27,19 @@ defmodule Ubg5.Projector do
                :error -> nil
                {:ok, value} -> value
              end
-    IO.inspect(state)
-    IO.inspect(%{result: result})
     {:reply, result, state}
   end
 
   @impl true
   def handle_cast({:set_verse, proj_id, bible, book_name, chapter_number, verse_number}, state) do
-    IO.inspect({bible, book_name, chapter_number, verse_number})
     verse = Bibles.get_verses(bible, book_name, chapter_number, verse_number, verse_number)
     |> List.first()
 
+    structure = Bibles.get_structure(bible)
+    book = Bibles.get_book_info_by_short_code(structure, verse.book_short_code)
+    verse = Map.put(verse, :book, book)
+    
     state = Map.put(state, proj_id, verse)
-    IO.inspect(state)
     {:noreply, state}
   end
   

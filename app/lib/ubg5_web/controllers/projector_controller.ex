@@ -9,11 +9,9 @@ defmodule Ubg5Web.ProjectorController do
 
     case Map.fetch(conn.query_params, "proj_id") do
       {:ok, proj_id} ->
-        verse = Projector.get_verse(proj_id)
         out = case Projector.get_verse(proj_id) do
                 nil -> ""
-                verse -> verse.bible <> ";" <>
-                    verse.book_short_code <> ";" <>
+                verse -> verse.book["full_name"] <> ";" <>
                     Integer.to_string(verse.chapter_number) <> ";" <>
                     Integer.to_string(verse.verse_number) <> ";" <>
                     verse.text
@@ -33,7 +31,6 @@ defmodule Ubg5Web.ProjectorController do
     {:ok, body, conn} = read_body(conn)
     [proj_id, bible, book_name, chapter_number, verse_number] = String.split(body, ";")
     {chapter_number, _} = Integer.parse(chapter_number)
-    IO.inspect({:body, body})
     {verse_number, _} = Integer.parse(verse_number)
     Projector.set_verse(proj_id, bible, book_name, chapter_number, verse_number)
     send_resp(conn, 200, "ok")
