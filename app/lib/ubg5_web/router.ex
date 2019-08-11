@@ -13,7 +13,7 @@ defmodule Ubg5Web.Router do
     plug :accepts, ["text"]
   end
 
-  scope "/projector" do
+  scope "/projector", Ubg5Web do
     pipe_through :projector
 
     post "/", ProjectorController, :set_verse

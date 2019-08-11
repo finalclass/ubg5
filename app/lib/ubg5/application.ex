@@ -8,6 +8,7 @@ defmodule Ubg5.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
+      {Ubg5.Projector, %{}},
       # Start the endpoint when the application starts
       Ubg5Web.Endpoint
       # Starts a worker by calling: Ubg5.Worker.start_link(arg)

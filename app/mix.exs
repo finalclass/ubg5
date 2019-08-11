@@ -39,6 +39,7 @@ defmodule Ubg5.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:temple, "~> 0.1.0"},
       {:tesla, "~> 1.2.1"},
+      {:elixir_uuid, "~> 1.2"}
     ]
   end
 end

@@ -40,9 +40,11 @@ html lang: "en" do
 
     div class: "chapter-container" do
       div class: "chapter",
+        "data-current-bible": @current_bible["bible"],
         "data-book-name": @book_name,
         "data-book-short-name": @book_short_name,
         "data-encoded-book-name": @book_slug_name,
+        "data-book-short-code": @current_book["short_code"],
         "data-nt-index": @book_oblubienica_index,
         "data-ot-name": @book_biblehub_name,
         "data-chapter-number": @chapter_number do

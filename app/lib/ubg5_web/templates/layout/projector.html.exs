@@ -52,7 +52,7 @@ html lang: "en" do
      }
     """ # style
   end # head
-  body "data-proj-id": @projId do
+  body "data-proj-id": @proj_id do
     aside class: "instruction" do
       h1 "Projektor Biblii"
       h3 "Jak to działa?"
