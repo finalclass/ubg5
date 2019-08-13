@@ -15,7 +15,7 @@ html lang: "en" do
         ul class: "chapters" do
           for chapter_num <- @book_chapters_numbers do
             li do
-              phx_link to: Routes.reader_path(@conn, :index, @current_bible["bible"], @book_slug_name, Integer.to_string(chapter_num)),
+              phx_link to: Routes.reader_path(@conn, :index, @current_bible, @book_slug_name, Integer.to_string(chapter_num)),
                 title: @book_name <> " " <> Integer.to_string(chapter_num) do
                 text Integer.to_string(chapter_num)
               end
@@ -27,7 +27,7 @@ html lang: "en" do
           for book <- @books do
             li do
               chapters_param = if book["nof_chapters"] > 1, do: %{chapters: true}, else: %{}
-              phx_link to: Routes.reader_path(@conn, :index, @current_bible["bible"], book["slug_name"], 1, chapters_param),
+              phx_link to: Routes.reader_path(@conn, :index, @current_bible, book["slug_name"], 1, chapters_param),
                 title: book["full_name"],
                 "data-nof_chapters": Integer.to_string(book["nof_chapters"]),
                 "data-encoded-name": book["slug_name"] do
@@ -40,7 +40,7 @@ html lang: "en" do
 
     div class: "chapter-container" do
       div class: "chapter",
-        "data-current-bible": @current_bible["bible"],
+        "data-current-bible": @current_bible,
         "data-book-name": @book_name,
         "data-book-short-name": @book_short_name,
         "data-encoded-book-name": @book_slug_name,
@@ -53,7 +53,7 @@ html lang: "en" do
             td do
               if @prev_chapter_number do
                 a class: "prev-chapter",
-                  href: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @prev_chapter_number) do 
+                  href: Routes.reader_path(@conn, :index, @current_bible, @current_book["slug_name"], @prev_chapter_number) do 
                   partial Phoenix.HTML.raw("&laquo; rozdział " <> Integer.to_string(@prev_chapter_number))
                 end
               end # if
@@ -63,12 +63,12 @@ html lang: "en" do
               cond do
                 @show_chapters ->
                   phx_link class: "show_chapters",
-                    to: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @chapter_number) do
+                    to: Routes.reader_path(@conn, :index, @current_bible, @current_book["slug_name"], @chapter_number) do
                     text "księgi"
                   end
                 !@show_chapters && @current_book["nof_chapters"] > 1 ->
                   phx_link class: "show-chapters",
-                    to: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @chapter_number, chapters: true) do
+                    to: Routes.reader_path(@conn, :index, @current_bible, @current_book["slug_name"], @chapter_number, chapters: true) do
                     text "rozdziały"
                   end
                 !@show_chapters && @current_book["nof_chapters"] <= 1 -> :ok
@@ -78,7 +78,7 @@ html lang: "en" do
             td do
               if @next_chapter_number do
                 a class: "next-chapter",
-                  href: Routes.reader_path(@conn, :index, @current_bible["bible"], @current_book["slug_name"], @next_chapter_number) do
+                  href: Routes.reader_path(@conn, :index, @current_bible, @current_book["slug_name"], @next_chapter_number) do
                   partial Phoenix.HTML.raw("rozdział " <> Integer.to_string(@next_chapter_number) <> " &raquo;")
                 end
               end

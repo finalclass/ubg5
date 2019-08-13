@@ -27,7 +27,7 @@ defmodule Ubg5Web.ReaderController do
 
     conn
     |> Plug.Conn.fetch_query_params(conn)
-    |> assign(:current_bible, structure)
+    |> assign(:current_bible, structure["bible"])
     |> assign(:current_book, book_structure)
     |> assign(:book_short_name, book_structure["short_name"])
     |> assign(:chapter_number, chapter_number)

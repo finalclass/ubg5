@@ -28,7 +28,7 @@ defmodule Importer do
   end
 
   def main(file_path) do
-    # delete!("/")
+    delete!("/")
     :ok = create_db()
     bible = import_bible(file_path)
 
@@ -57,7 +57,7 @@ defmodule Importer do
 
     %{
       type: "structure",
-      bible: "ubg",
+      short_code: "ubg",
       books: books
     }
   end
@@ -71,7 +71,7 @@ defmodule Importer do
 
         Enum.each(chapter.value, fn verse ->
           fun.(%{
-            bible: "ubg",
+            bible_short_code: "ubg",
             type: "verse",
             book_short_code: book.attr.uu,
             chapter_number: elem(Integer.parse(chapter.attr.n), 0),

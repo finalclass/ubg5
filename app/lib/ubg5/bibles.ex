@@ -18,8 +18,8 @@ defmodule Ubg5.Bibles do
               
               case Type of
                 <<"structure">> ->
-                  Bible = couch_util:get_value(<<"bible">>, Doc),
-                  Emit(Bible, {Doc});
+                  ShortCode = couch_util:get_value(<<"short_code">>, Doc),
+                  Emit(ShortCode, {Doc});
                 _ -> ok
               end
             end.            
@@ -32,12 +32,12 @@ defmodule Ubg5.Bibles do
               
               case Type of
                 <<"verse">> ->
-                  Bible = couch_util:get_value(<<"bible">>, Doc),
+                  BibleShortCode = couch_util:get_value(<<"bible_short_code">>, Doc),
                   BookShortCode = couch_util:get_value(<<"book_short_code">>, Doc),
                   ChapterNumber = couch_util:get_value(<<"chapter_number">>, Doc),
                   VerseNumber = couch_util:get_value(<<"verse_number">>, Doc),
                   VerseText = couch_util:get_value(<<"text">>, Doc),
-                  Emit([Bible, BookShortCode, ChapterNumber, VerseNumber], VerseText);
+                  Emit([BibleShortCode, BookShortCode, ChapterNumber, VerseNumber], VerseText);
                 _ -> ok
               end
             end.
@@ -49,19 +49,49 @@ defmodule Ubg5.Bibles do
     )
   end
 
+  def find_chapter(bible_short_code, book_slug_name, chapter_number) do
+    case get_structure(bible_short_code) do
+      {:error, _} ->
+        {:error, :missing_bible}
+
+      {:ok, structure} ->
+        case get_book_info_by_slug(structure, book_slug_name) do
+          nil ->
+            {:error, :missing_book}
+
+          book_structure ->
+            case chapter_number > book_structure["nof_chapters"] or chapter_number < 1 do
+              true ->
+                {:error, :missing_chapter}
+
+              false ->
+                verses =
+                  get_verses(
+                    bible_short_code,
+                    book_structure["short_code"],
+                    chapter_number,
+                    1,
+                    %{}
+                  )
+
+                {:ok, structure["short_code"], book_structure, verses}
+            end
+        end
+    end
+  end
+
   def get_structure(bible) do
     res = get!("/_design/query/_view/structure", query: %{key: Jason.encode!(bible)})
 
     case res do
       %{status: 200, body: result} ->
-        if length(result["rows"]) == 0 do
-          throw("bible structure does not exists")
+        case length(result["rows"]) do
+          0 -> {:error, "bible structure does not exists"}
+          _ -> {:ok, List.first(result["rows"])["value"]}
         end
 
-        List.first(result["rows"])["value"]
-
       res ->
-        throw(res)
+        {:error, res.body}
     end
   end
 
@@ -76,7 +106,7 @@ defmodule Ubg5.Bibles do
       book["short_code"] == book_short_code
     end)
   end
-  
+
   def get_verses(bible, book_short_code, chapter, verse_from, verse_to) do
     res =
       get!("/_design/query/_view/verses",

@@ -56,6 +56,7 @@ defmodule Ubg5.ProjectorTest do
     :ok
   end
 
+  @tag only: false
   test "set projector id" do
     Projector.set_verse("abc", "ubg", "gen", 1, 1)
     verse = Projector.get_verse("abc")
