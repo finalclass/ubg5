@@ -74,7 +74,7 @@ defmodule Ubg5.Bibles do
                     %{}
                   )
 
-                {:ok, structure["short_code"], book_structure, verses}
+                {:ok, structure, book_structure, verses}
             end
         end
     end
