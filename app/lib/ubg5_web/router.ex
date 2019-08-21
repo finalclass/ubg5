@@ -21,7 +21,8 @@ defmodule Ubg5Web.Router do
   
   scope "/", Ubg5Web do
     pipe_through :browser
-    
+
+    get "/navigate", NavigatorController, :index
     get "/", ReaderController, :index
     get "/:bible/:book_slug_name/:chapter_number/", ReaderController, :index
     get "/projector", ProjectorController, :index
